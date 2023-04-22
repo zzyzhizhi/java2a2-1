@@ -2,13 +2,13 @@ package cn.edu.sustech.cs209.chatting.common;
 
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Message implements Serializable {
-
-
+    private int onlineNum;
 
     private Long timestamp;
 
@@ -16,11 +16,19 @@ public class Message implements Serializable {
 
     private String sendTo;
 
+    public List<String> sendToLIst = new ArrayList<>();
+
     private String data;
+
+    public String queryName;
 
     private MessageType type;
 
-    LinkedList<String> userlist = new LinkedList<>();
+    public ArrayList<String> userlist = new ArrayList<>();
+
+    public ArrayList<Message> chatMessage = new ArrayList<>();
+
+    public ArrayList<Message> queryChatMsg = new ArrayList<>();
 
     public Message() {
 
@@ -46,7 +54,7 @@ public class Message implements Serializable {
         this.type = type;
     }
 
-    public void setUserlist(LinkedList<String> userlist) {
+    public void setUserlist(ArrayList<String> userlist) {
         this.userlist = userlist;
     }
 
@@ -72,5 +80,13 @@ public class Message implements Serializable {
 
     public String getData() {
         return data;
+    }
+
+    public int getOnlineNum() {
+        return onlineNum;
+    }
+
+    public void setOnlineNum(int onlineNum) {
+        this.onlineNum = onlineNum;
     }
 }
