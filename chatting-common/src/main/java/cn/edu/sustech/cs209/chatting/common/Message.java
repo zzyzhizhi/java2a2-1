@@ -10,6 +10,10 @@ public class Message implements Serializable {
 
     private String sentBy;
 
+    public byte[] content;
+
+    public String fileName;
+
     private String sendTo;
 
     public List<String> sendToLIst = new ArrayList<>();

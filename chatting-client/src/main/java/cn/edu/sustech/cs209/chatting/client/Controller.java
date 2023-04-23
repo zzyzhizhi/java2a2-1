@@ -505,18 +505,15 @@ public class Controller implements Initializable {
       if (file != null) {
         try {
           // 读取文件内容
-          byte[] content = Files.readAllBytes(file.toPath());
+          Message m = new Message();
           // 连接到服务器
-          //Socket socket = new Socket("server_address", server_port);
-          OutputStream outputStream = socket.getOutputStream();
-          // 发送文件名和文件大小
-          DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-          dataOutputStream.writeUTF(file.getName());
-          dataOutputStream.writeInt(content.length);
-          // 发送文件内容
-          outputStream.write(content);
-          outputStream.flush();
-          socket.close();
+          m.setSentBy(username);
+          m.setSendTo(msg.getSendTo());
+          m.setType(MessageType.FILE);
+          m.content = Files.readAllBytes(file.toPath());
+          m.fileName = file.getName();
+          os.writeObject(m);
+          os.flush();
         } catch (IOException e) {
           e.printStackTrace();
         }
