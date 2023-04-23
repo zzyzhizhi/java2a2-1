@@ -1,10 +1,6 @@
 package cn.edu.sustech.cs209.chatting.common;
-
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Message implements Serializable {
@@ -24,7 +20,7 @@ public class Message implements Serializable {
 
     private MessageType type;
 
-    public ArrayList<String> userlist = new ArrayList<>();
+    public ArrayList<String> userList = new ArrayList<>();
 
     public ArrayList<Message> chatMessage = new ArrayList<>();
 
@@ -54,16 +50,16 @@ public class Message implements Serializable {
         this.type = type;
     }
 
-    public void setUserlist(ArrayList<String> userlist) {
-        this.userlist = userlist;
+    public void setUserList(ArrayList<String> userList) {
+        this.userList = userList;
     }
 
     public MessageType getType() {
         return type;
     }
 
-    public List<String> getUserlist() {
-        return userlist;
+    public List<String> getUserList() {
+        return userList;
     }
 
     public Long getTimestamp() {

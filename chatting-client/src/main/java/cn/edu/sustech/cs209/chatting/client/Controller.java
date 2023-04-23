@@ -18,19 +18,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
@@ -50,12 +46,11 @@ public class Controller implements Initializable {
   @FXML
   private ListView<String> chatList;
 
-  private ArrayList<String> canTalkTo = new ArrayList<>();
-
-  private Map<String,ArrayList<Message>> nameToMsgList = new HashMap<>();
-
   @FXML
   private Label currentOnlineCnt;
+
+  @FXML
+  private Button exit;
 
   @FXML
   private Label currentUsername;
@@ -69,16 +64,7 @@ public class Controller implements Initializable {
   @FXML
   private Button sendFile;
 
-//  @FXML
-//  private Font x3;
-//
-//  @FXML
-//  private Color x4;
-
-
   private Socket socket = new Socket();
-
-  private String CurrentTalker;
 
   private String username;
 
@@ -91,7 +77,7 @@ public class Controller implements Initializable {
   public ArrayList<String> currentQueryMember = new ArrayList<>();
 
   private static OC.MyObjectOutputStream os = null;
-  //private static OC.MyObjectInputStream ois = null;
+
   private Client client;
 
   @Override
@@ -160,11 +146,7 @@ public class Controller implements Initializable {
               e.printStackTrace();
             }
           }
-        ContextMenu contextMenu = new ContextMenu();
-        for (String username : currentQueryMember) {
-          MenuItem menuItem = new MenuItem(username);
-          contextMenu.getItems().add(menuItem);
-        }
+
         if (event.getButton() == MouseButton.SECONDARY){
           String str = String.valueOf(chatList.getSelectionModel().getSelectedItems());
           str = str.substring(1,str.length()-1);
@@ -178,6 +160,11 @@ public class Controller implements Initializable {
             os.flush();
           } catch (IOException e) {
             e.printStackTrace();
+          }
+          ContextMenu contextMenu = new ContextMenu();
+          for (String username : currentQueryMember) {
+            MenuItem menuItem = new MenuItem(username);
+            contextMenu.getItems().add(menuItem);
           }
           contextMenu.show(chatList,event.getScreenX(), event.getScreenY());
         }
@@ -209,6 +196,7 @@ public class Controller implements Initializable {
       // 显示舞台
       emojiStage.show();
     });
+
   }
 
 
@@ -217,7 +205,7 @@ public class Controller implements Initializable {
   @FXML
   public void freshUsernameandCount(Message message){
     Platform.runLater(()-> {currentUsername.setText("Username: "+username);currentUsername.impl_updatePeer();});
-    Platform.runLater(()-> {currentOnlineCnt.setText("Online: "+message.getUserlist().size());currentOnlineCnt.impl_updatePeer();});
+    Platform.runLater(()-> {currentOnlineCnt.setText("Online: "+message.getUserList().size());currentOnlineCnt.impl_updatePeer();});
   }
   @FXML
   public void createPrivateChat() {
@@ -395,11 +383,11 @@ public class Controller implements Initializable {
 //      e.printStackTrace();
 //    }
     ArrayList<String> s = new ArrayList<>();
-    for (String str : message.getUserlist()){
+    for (String str : message.getUserList()){
       if (!str.equals(username)) s.add(str);
     }
     currentUsers.clear();
-    currentUsers.addAll(message.getUserlist());
+    currentUsers.addAll(message.getUserList());
     if (currentQuery!=null) s.addAll(currentQuery);
     ObservableList<String> str = FXCollections.observableArrayList(s);
     Platform.runLater(()-> {
@@ -534,4 +522,22 @@ public class Controller implements Initializable {
         }
       }
   }
+
+  public void exit(){
+    Message m = new Message();
+    m.setType(MessageType.DISCONNECT);
+    m.setSentBy(username);
+    try {
+      os.writeObject(m);
+      os.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    Stage stage = (Stage) exit.getScene().getWindow();
+    stage.close();
+  }
+
+
+
 }

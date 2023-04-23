@@ -16,7 +16,6 @@ public class Server {
     //
     public static ArrayList<String> userInfoList = new ArrayList<>();
     public static HashMap<String, List<String>> memberInQuery = new HashMap<>();
-    //public static HashMap<String>
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server");
         ServerSocket ss = new ServerSocket(4669);
