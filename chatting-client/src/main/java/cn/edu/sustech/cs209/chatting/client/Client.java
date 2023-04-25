@@ -99,7 +99,7 @@ public void downloadFile(Message message){
   FileOutputStream fos = null;
   String fileName = message.fileName;
   try {
-    fos = new FileOutputStream("C:\\Users\\32362\\Desktop\\"+fileName);
+    fos = new FileOutputStream("C:\\Users\\32362\\Desktop\\fileReceive\\"+fileName);
   } catch (FileNotFoundException e) {
     e.printStackTrace();
   }

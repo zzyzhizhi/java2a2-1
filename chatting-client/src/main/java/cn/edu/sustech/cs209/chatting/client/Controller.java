@@ -1,8 +1,8 @@
 package cn.edu.sustech.cs209.chatting.client;
 
 import cn.edu.sustech.cs209.chatting.common.Message;
-import cn.edu.sustech.cs209.chatting.common.OC;
 import cn.edu.sustech.cs209.chatting.common.MessageType;
+import cn.edu.sustech.cs209.chatting.common.OC;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,25 +14,20 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
-import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +66,7 @@ public class Controller implements Initializable {
   private Message msg = new Message();
 
   public ArrayList<String> currentUsers = new ArrayList<>();
-  
+
   public ArrayList<String> currentQuery = new ArrayList<>();
 
   public ArrayList<String> currentQueryMember = new ArrayList<>();
@@ -106,10 +101,7 @@ public class Controller implements Initializable {
       } catch (IOException e) {
         e.printStackTrace();
       }
-            /*
-               TODO: Check if there is a user with the same name among the currently logged-in users,
-                     if so, ask the user to change the username
-             */
+
     } else {
       System.out.println("Invalid username " + input + ", exiting");
       Platform.exit();
@@ -123,33 +115,32 @@ public class Controller implements Initializable {
           System.out.println("Left clicked");
           // 在这里添加您的代码，以处理鼠标双击事件
           String str = String.valueOf(chatList.getSelectionModel().getSelectedItems());
-          str = str.substring(1,str.length()-1);
+          str = str.substring(1, str.length() - 1);
           msg.setSentBy(username);
           msg.setSendTo(str);
           os = client.getOs();
           Message m = new Message();
           m.setSentBy(username);
           m.setSendTo(str);
-          if (str.contains("...(")){
+          if (str.contains("...(")) {
             msg.setType(MessageType.QUERYMSG);
             m.setType(MessageType.QUERYCHATSHEET);
-          }
-          else {
+          } else {
             msg.setType(MessageType.SINGLE);
             m.setType(MessageType.CHATSHEETNEW);
           }
 
-            try {
-              os.writeObject(m);
-              os.flush();
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
+          try {
+            os.writeObject(m);
+            os.flush();
+          } catch (IOException e) {
+            e.printStackTrace();
           }
+        }
 
-        if (event.getButton() == MouseButton.SECONDARY){
+        if (event.getButton() == MouseButton.SECONDARY) {
           String str = String.valueOf(chatList.getSelectionModel().getSelectedItems());
-          str = str.substring(1,str.length()-1);
+          str = str.substring(1, str.length() - 1);
           System.out.println("Right clicked");
           Message m = new Message();
           m.setType(MessageType.FINDONRQUERYMEMBER);
@@ -166,7 +157,7 @@ public class Controller implements Initializable {
             MenuItem menuItem = new MenuItem(username);
             contextMenu.getItems().add(menuItem);
           }
-          contextMenu.show(chatList,event.getScreenX(), event.getScreenY());
+          contextMenu.show(chatList, event.getScreenX(), event.getScreenY());
         }
       }
     });
@@ -200,13 +191,18 @@ public class Controller implements Initializable {
   }
 
 
-
-
   @FXML
-  public void freshUsernameandCount(Message message){
-    Platform.runLater(()-> {currentUsername.setText("Username: "+username);currentUsername.impl_updatePeer();});
-    Platform.runLater(()-> {currentOnlineCnt.setText("Online: "+message.getUserList().size());currentOnlineCnt.impl_updatePeer();});
+  public void freshUsernameandCount(Message message) {
+    Platform.runLater(() -> {
+      currentUsername.setText("Username: " + username);
+      currentUsername.impl_updatePeer();
+    });
+    Platform.runLater(() -> {
+      currentOnlineCnt.setText("Online: " + message.getUserList().size());
+      currentOnlineCnt.impl_updatePeer();
+    });
   }
+
   @FXML
   public void createPrivateChat() {
     Message m = new Message();
@@ -221,7 +217,7 @@ public class Controller implements Initializable {
     Stage stage = new Stage();
     ComboBox<String> userSel = new ComboBox<>();
     ArrayList<String> a = new ArrayList<>();
-    for (String s : currentUsers){
+    for (String s : currentUsers) {
       if (!s.equals(username)) a.add(s);
     }
     userSel.getItems().addAll(a);
@@ -303,13 +299,13 @@ public class Controller implements Initializable {
           }
         }
       }
-      String[] s = new String[selectedUsers.size()+1];
+      String[] s = new String[selectedUsers.size() + 1];
       for (int i = 0; i < selectedUsers.size(); i++) {
         s[i] = selectedUsers.get(i);
       }
       s[selectedUsers.size()] = username;
       Arrays.sort(s);
-      String queryName = s[0]+","+s[1]+","+s[2]+"..."+"("+s.length+")";
+      String queryName = s[0] + "," + s[1] + "," + s[2] + "..." + "(" + s.length + ")";
       //currentQuery.add(queryName);
       Message m = new Message();
       m.sendToLIst.addAll(selectedUsers);
@@ -335,19 +331,17 @@ public class Controller implements Initializable {
    */
 
 
-
   @FXML
   public void doSendMessage() {
     // TODO
     String str = inputArea.getText();
-    if (str.equals("")){
+    if (str.equals("")) {
       Alert alert = new Alert(Alert.AlertType.WARNING);
       alert.setTitle("警告");
       alert.setHeaderText(null);
       alert.setContentText("不允许发送空消息");
       alert.showAndWait();
-    }
-    else {
+    } else {
       Message a = new Message();
       os = client.getOs();
       a.setData(str);
@@ -362,7 +356,7 @@ public class Controller implements Initializable {
       } catch (IOException e) {
         e.printStackTrace();
       }
-      Platform.runLater(()->{
+      Platform.runLater(() -> {
         inputArea.clear();
         inputArea.impl_updatePeer();
       });
@@ -372,7 +366,7 @@ public class Controller implements Initializable {
 
 
   @FXML
-  public void newChatList(Message message){
+  public void newChatList(Message message) {
     //canTalkTo.add(message.getSendTo());
 //    Message m = new Message();
 //    m.setType(MessageType.USERLIST);
@@ -383,30 +377,30 @@ public class Controller implements Initializable {
 //      e.printStackTrace();
 //    }
     ArrayList<String> s = new ArrayList<>();
-    for (String str : message.getUserList()){
+    for (String str : message.getUserList()) {
       if (!str.equals(username)) s.add(str);
     }
     currentUsers.clear();
     currentUsers.addAll(message.getUserList());
-    if (currentQuery!=null) s.addAll(currentQuery);
+    if (currentQuery != null) s.addAll(currentQuery);
     ObservableList<String> str = FXCollections.observableArrayList(s);
-    Platform.runLater(()-> {
+    Platform.runLater(() -> {
       chatList.setItems(str);
       chatList.impl_updatePeer();
     });
   }
 
-  public void freshChatSheet(ArrayList<Message> list){
+  public void freshChatSheet(ArrayList<Message> list) {
     ObservableList<Message> str = FXCollections.observableArrayList(list);
-    Platform.runLater(()->{
+    Platform.runLater(() -> {
       chatContentList.setItems(str);
       chatContentList.impl_updatePeer();
     });
   }
 
-  public void freshQueryChatSheet(ArrayList<Message> list){
+  public void freshQueryChatSheet(ArrayList<Message> list) {
     ObservableList<Message> str = FXCollections.observableArrayList(list);
-    Platform.runLater(()->{
+    Platform.runLater(() -> {
       chatContentList.setItems(str);
       chatContentList.impl_updatePeer();
     });
@@ -414,14 +408,13 @@ public class Controller implements Initializable {
 
   @FXML
   public void singleMsgFromServer(Message message) {
-    if (message.chatMessage !=  null) {
+    if (message.chatMessage != null) {
       ObservableList<Message> str = FXCollections.observableArrayList(message.chatMessage);
       Platform.runLater(() -> {
         chatContentList.setItems(str);
         chatContentList.impl_updatePeer();
       });
-    }
-    else {
+    } else {
       ArrayList<Message> m = new ArrayList<>();
       ObservableList<Message> str = FXCollections.observableArrayList(m);
       Platform.runLater(() -> {
@@ -432,15 +425,14 @@ public class Controller implements Initializable {
   }
 
   @FXML
-  public void queryMsgFromServer(Message message){
-    if (message.queryChatMsg!=null){
+  public void queryMsgFromServer(Message message) {
+    if (message.queryChatMsg != null) {
       ObservableList<Message> str = FXCollections.observableArrayList(message.queryChatMsg);
       Platform.runLater(() -> {
         chatContentList.setItems(str);
         chatContentList.impl_updatePeer();
       });
-    }
-    else {
+    } else {
       ArrayList<Message> m = new ArrayList<>();
       ObservableList<Message> str = FXCollections.observableArrayList(m);
       Platform.runLater(() -> {
@@ -449,8 +441,6 @@ public class Controller implements Initializable {
       });
     }
   }
-
-
 
 
   /**
@@ -497,30 +487,29 @@ public class Controller implements Initializable {
   }
 
 
-
   @FXML
-  public void sendFile(){
-      FileChooser fileChooser = new FileChooser();
-      File file = fileChooser.showOpenDialog(null);
-      if (file != null) {
-        try {
-          // 读取文件内容
-          Message m = new Message();
-          // 连接到服务器
-          m.setSentBy(username);
-          m.setSendTo(msg.getSendTo());
-          m.setType(MessageType.FILE);
-          m.content = Files.readAllBytes(file.toPath());
-          m.fileName = file.getName();
-          os.writeObject(m);
-          os.flush();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+  public void sendFile() {
+    FileChooser fileChooser = new FileChooser();
+    File file = fileChooser.showOpenDialog(null);
+    if (file != null) {
+      try {
+        // 读取文件内容
+        Message m = new Message();
+        // 连接到服务器
+        m.setSentBy(username);
+        m.setSendTo(msg.getSendTo());
+        m.setType(MessageType.FILE);
+        m.content = Files.readAllBytes(file.toPath());
+        m.fileName = file.getName();
+        os.writeObject(m);
+        os.flush();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
+    }
   }
 
-  public void exit(){
+  public void exit() {
     Message m = new Message();
     m.setType(MessageType.DISCONNECT);
     m.setSentBy(username);
@@ -534,7 +523,6 @@ public class Controller implements Initializable {
     Stage stage = (Stage) exit.getScene().getWindow();
     stage.close();
   }
-
 
 
 }
