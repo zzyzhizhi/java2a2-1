@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" fx:controller="cn.edu.sustech.cs209.chatting.client.Controller">
+    <children>
+        <Button mnemonicParsing="false" onAction="#getAllPostName" prefHeight="29.0" prefWidth="167.0" text="全部帖子" />
+      <Button mnemonicParsing="false" text="查看帖子内容" />
+        <Button mnemonicParsing="false" onAction="#giveLike" prefHeight="18.0" prefWidth="55.0" text="点赞" />
+        <Button mnemonicParsing="false" onAction="#giveShare" text="转发" />
+        <Button mnemonicParsing="false" onAction="#giveFavorite" text="收藏" />
+        <Button mnemonicParsing="false" onAction="#requireWhoLikePost" text="查看帖子的点赞" />
+        <Button mnemonicParsing="false" onAction="#requireWhoSharePost" text="查看帖子的转发" />
+        <Button mnemonicParsing="false" onAction="#requireWhoFavoritePost" text="查看帖子的收藏" />
+        <Button mnemonicParsing="false" onAction="#addFollow" text="关注" />
+        <Button mnemonicParsing="false" onAction="#cancelFollow" text="取消关注" />
+        <Button mnemonicParsing="false" onAction="#requireWhoIFollow" text="查看自己的关注列表" />
+        <Button mnemonicParsing="false" onAction="#newPost" text="发布帖子" />
+        <Button mnemonicParsing="false" onAction="#newReplyToPost" text="回复帖子" />
+        <Button mnemonicParsing="false" onAction="#newReplyToReply" text="回复回复" />
+        <Button mnemonicParsing="false" onAction="#getMyPost" text="查看自己发布的帖子" />
+        <Button mnemonicParsing="false" onAction="#getMyReply" text="查看自己回复的帖子" />
+    </children>
+</VBox>
